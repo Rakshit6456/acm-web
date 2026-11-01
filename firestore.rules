@@ -1,0 +1,72 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ---- Roles --------------------------------------------------------------
+    // The root owner email always has full access (so you can never lock yourself out).
+    // Everyone else gets a role from the document admins/{their-email}: owner | editor | viewer.
+    function signedIn() { return request.auth != null && request.auth.token.email != null; }
+    function rootOwner() { return signedIn() && request.auth.token.email in ['rakshityadav006@gmail.com']; }
+    function adminPath() { return /databases/$(database)/documents/admins/$(request.auth.token.email); }
+    function role() {
+      return rootOwner() ? 'owner'
+        : (signedIn() && exists(adminPath()) ? get(adminPath()).data.role : 'none');
+    }
+    function isOwner() { return role() == 'owner'; }
+    function canEdit() { return role() in ['owner', 'editor']; }
+    function canView() { return role() in ['owner', 'editor', 'viewer']; }
+
+    function str(v, max) { return v is string && v.size() > 0 && v.size() <= max; }
+    function strOpt(v, max) { return v is string && v.size() <= max; }
+
+    // ---- Public website content: anyone reads, owners/editors write ---------
+    match /events/{id}        { allow read: if true; allow write: if canEdit(); }
+    match /members/{id}       { allow read: if true; allow write: if canEdit(); }
+    match /achievements/{id}  { allow read: if true; allow write: if canEdit(); }
+    match /resources/{id}     { allow read: if true; allow write: if canEdit(); }
+    match /settings/{id}      { allow read: if true; allow write: if canEdit(); }
+
+    // ---- Admin accounts: only owners manage them ----------------------------
+    match /admins/{id} {
+      allow get: if signedIn() && (request.auth.token.email == id || isOwner());
+      allow list: if isOwner();
+      allow create, update: if isOwner() && request.resource.data.role in ['owner', 'editor', 'viewer'];
+      allow delete: if isOwner();
+    }
+
+    // ---- Inboxes: visitors may submit; viewers read; editors manage ----------
+    match /applications/{id} {
+      allow create: if request.resource.data.keys().hasOnly(['name','email','program','year','interest','why','status','createdAt'])
+        && str(request.resource.data.name, 100) && str(request.resource.data.email, 120)
+        && str(request.resource.data.program, 100) && str(request.resource.data.year, 20)
+        && str(request.resource.data.interest, 100) && str(request.resource.data.why, 1500)
+        && request.resource.data.status == 'new' && request.resource.data.createdAt == request.time;
+      allow read: if canView();
+      allow update, delete: if canEdit();
+    }
+
+    match /messages/{id} {
+      allow create: if request.resource.data.keys().hasOnly(['name','email','subject','message','status','createdAt'])
+        && str(request.resource.data.name, 100) && str(request.resource.data.email, 120)
+        && str(request.resource.data.subject, 150) && str(request.resource.data.message, 2000)
+        && request.resource.data.status == 'new' && request.resource.data.createdAt == request.time;
+      allow read: if canView();
+      allow update, delete: if canEdit();
+    }
+
+    // Event registrations. The client uses a fixed document id (eventId + email) and only
+    // `create` is public, so the same email cannot register twice for one event.
+    match /registrations/{id} {
+      allow create: if request.resource.data.keys().hasOnly(['eventId','eventTitle','name','email','phone','program','year','status','createdAt'])
+        && str(request.resource.data.eventId, 120) && str(request.resource.data.eventTitle, 200)
+        && str(request.resource.data.name, 100) && str(request.resource.data.email, 120)
+        && strOpt(request.resource.data.phone, 20)
+        && str(request.resource.data.program, 100) && str(request.resource.data.year, 20)
+        && request.resource.data.status == 'registered' && request.resource.data.createdAt == request.time;
+      allow read: if canView();
+      allow update, delete: if canEdit();
+    }
+
+    match /{document=**} { allow read, write: if false; }
+  }
+}

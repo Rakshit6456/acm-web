@@ -1,0 +1,63 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-serif), Georgia, serif;
+
+  --color-ink: #0a1b33;
+  --color-navy: #0b2545;
+  --color-navy-2: #12335f;
+  --color-acm: #0085ca;
+  --color-acm-dark: #006ba3;
+  --color-acm-soft: #e6f3fa;
+  --color-paper: #f5f7fa;
+  --color-line: #dde3ec;
+  --color-body: #44546a;
+  --color-muted: #6b7a90;
+  --color-gold: #c8963e;
+}
+
+@layer base {
+  html { scroll-behavior: smooth; }
+  body {
+    background: #fff;
+    color: var(--color-body);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, h4 { color: var(--color-ink); text-wrap: balance; }
+  p { text-wrap: pretty; }
+  ::selection { background: var(--color-acm); color: #fff; }
+  :focus-visible { outline: 2px solid var(--color-acm); outline-offset: 3px; }
+}
+
+@layer components {
+  .container-x { @apply mx-auto w-full max-w-6xl px-5 sm:px-8; }
+  .font-display { font-family: var(--font-serif); letter-spacing: -0.015em; }
+  .eyebrow { @apply text-xs font-semibold uppercase tracking-[0.16em] text-acm; }
+  .btn-primary { @apply inline-flex items-center justify-center gap-2 rounded-md px-5 py-2.5 text-sm font-semibold transition-colors bg-acm text-white hover:bg-acm-dark; }
+  .btn-dark { @apply inline-flex items-center justify-center gap-2 rounded-md px-5 py-2.5 text-sm font-semibold transition-colors bg-navy text-white hover:bg-navy-2; }
+  .btn-ghost-light { @apply inline-flex items-center justify-center gap-2 rounded-md px-5 py-2.5 text-sm font-semibold transition-colors border border-white/30 text-white hover:bg-white/10; }
+  .btn-outline { @apply inline-flex items-center justify-center gap-2 rounded-md px-5 py-2.5 text-sm font-semibold transition-colors border border-line bg-white text-ink hover:border-acm hover:text-acm; }
+  .card { @apply rounded-xl border border-line bg-white; }
+  .grid-bg {
+    background-image:
+      linear-gradient(to right, rgba(255,255,255,.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255,255,255,.05) 1px, transparent 1px);
+    background-size: 44px 44px;
+  }
+}
+
+/* ---- Admin portal: neutral, tool-like styling ---- */
+@layer components {
+  .a-btn { @apply inline-flex h-10 items-center justify-center gap-1.5 whitespace-nowrap rounded-md px-4 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50; }
+  .a-primary { @apply inline-flex h-10 items-center justify-center gap-1.5 whitespace-nowrap rounded-md bg-ink px-4 text-sm font-medium text-white transition-colors hover:bg-navy-2 disabled:cursor-not-allowed disabled:opacity-50; }
+  .a-outline { @apply inline-flex h-10 items-center justify-center gap-1.5 whitespace-nowrap rounded-md border border-line bg-white px-4 text-sm font-medium text-ink transition-colors hover:bg-paper disabled:cursor-not-allowed disabled:opacity-50; }
+  .a-danger { @apply inline-flex h-10 items-center justify-center gap-1.5 whitespace-nowrap rounded-md bg-red-600 px-4 text-sm font-medium text-white transition-colors hover:bg-red-700; }
+  .admin { font-size: 14px; }
+  .admin h1, .admin h2, .admin h3 { font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif; letter-spacing: -0.01em; }
+  .admin .font-display { font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif; letter-spacing: -0.01em; }
+}
+@keyframes a-slide { from { transform: translateX(24px); opacity: 0 } to { transform: none; opacity: 1 } }
+@keyframes a-slide-l { from { transform: translateX(-24px); opacity: 0 } to { transform: none; opacity: 1 } }
+@keyframes a-fade { from { opacity: 0 } to { opacity: 1 } }
