@@ -2,6 +2,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { ArrowRight, BookOpen, Wrench, Network, CalendarDays, MapPin, Clock } from "lucide-react"
 import { Section, SectionHead } from "@/components/bits"
+import { HeroVideo } from "@/components/hero-video"
 import { Avatar } from "@/components/avatar"
 import { pillars } from "@/lib/static"
 import { getAchievements, getEvents, getMembers } from "@/lib/content"
@@ -25,15 +26,12 @@ export default async function Home() {
       {/* HERO */}
       <section className="relative isolate flex min-h-[560px] items-center overflow-hidden bg-navy text-white md:min-h-[640px]">
         {/* Poster shows while the video loads, and for visitors who prefer reduced motion */}
-        <video autoPlay muted loop playsInline preload="auto" poster="/videos/hero-poster.jpg" aria-hidden tabIndex={-1}
-          className="pointer-events-none absolute inset-0 -z-20 h-full w-full object-cover motion-reduce:hidden">
-          <source src="/videos/hero.mp4" type="video/mp4" />
-        </video>
+        <HeroVideo />
         <Image src="/videos/hero-poster.jpg" alt="" fill priority sizes="100vw" className="-z-30 object-cover" />
         <div className="absolute inset-0 -z-10 bg-gradient-to-r from-navy/90 via-navy/65 to-navy/30" />
         <div className="container-x relative py-20 md:py-28">
           <div className="max-w-2xl">
-            <p className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/5 px-3 py-1 text-xs font-medium tracking-wide text-white/85 backdrop-blur">
+            <p className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/5 px-3 py-1 text-xs font-medium tracking-wide text-white/85">
               <span className="h-1.5 w-1.5 rounded-full bg-acm" /> Official ACM student chapter · IILM University
             </p>
             <h1 className="font-display mt-6 text-4xl font-semibold leading-[1.08] !text-white sm:text-5xl lg:text-6xl">

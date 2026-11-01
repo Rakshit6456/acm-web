@@ -4,7 +4,7 @@ import { ArrowRight } from "lucide-react"
 export function PageHeader({ eyebrow, title, children }: { eyebrow: string; title: string; children?: React.ReactNode }) {
   return (
     <section className="grid-bg relative overflow-hidden bg-navy text-white">
-      <div className="absolute -right-24 -top-24 h-72 w-72 rounded-full bg-acm/25 blur-3xl" />
+      <div className="absolute -right-24 -top-24 h-72 w-72 rounded-full bg-[radial-gradient(closest-side,rgba(0,133,202,.28),transparent)]" />
       <div className="container-x relative py-16 md:py-20">
         <p className="text-xs font-semibold uppercase tracking-[0.16em] text-acm">{eyebrow}</p>
         <h1 className="font-display mt-3 max-w-3xl text-4xl font-semibold !text-white md:text-5xl">{title}</h1>

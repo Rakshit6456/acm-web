@@ -21,7 +21,7 @@ export function SiteHeader() {
 
   return (
     <>
-    <header className="sticky top-0 z-50 border-b border-line bg-white/90 backdrop-blur">
+    <header className="sticky top-0 z-50 border-b border-line bg-white">
       <div className="hidden bg-navy text-[11px] tracking-wide text-white/80 md:block">
         <div className="container-x flex h-8 items-center justify-between">
           <span>Student chapter of the Association for Computing Machinery</span>
